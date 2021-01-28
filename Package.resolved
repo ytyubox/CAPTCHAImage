@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "TestUtils",
+        "repositoryURL": "/Users/ios.yu/Desktop/TestUtils",
+        "state": {
+          "branch": "main",
+          "revision": "8f3c98c844a567598120d1420bca1848078b2caa",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
