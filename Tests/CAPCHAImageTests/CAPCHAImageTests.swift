@@ -20,10 +20,10 @@ struct CAPCHA {
     private let fontFactory: Factory<UIFont>?
     private let colorFactory: Factory<UIColor>?
     private let targetString: String
-    let offset: CGFloat = 0
+    let offset: CGFloat = 10
 
     // helper
-    func getUIImage(frame: CGRect) throws -> UIImage {
+    func getUIImage(backgroundColor: UIColor = .clear) throws -> UIImage {
         let chars = targetString
             .map(\.description)
         var lastMaxX: CGFloat = 0
@@ -35,25 +35,38 @@ struct CAPCHA {
                 if let font = fontFactory?(index), attributed[.font] == nil {
                     attributed[.font] = font
                 }
+                if let color = colorFactory?(index), attributed[.foregroundColor] == nil {
+                    attributed[.foregroundColor] = color
+                }
                 label.attributedText = NSAttributedString(string: string, attributes: attributed)
-                label.textColor = colorFactory?(index)
-                label.transform = rotateEffect(index)
                 label.sizeToFit()
-                label.frame.origin.x = frameXFactory(index) +
-                    lastMaxX +
-                    offset
+                print(label.frame.width, terminator: " ")
+                label.layer.transform = rotateEffect(index, midX: label.frame.midX, midY: label.frame.midY)
+                let addictionalX = frameXFactory(index) // + offset
+                let addictionalY = frameYFactory(index)
+//                print(addictionalX)
+                label.frame.origin.x = addictionalX + lastMaxX
+                print(label.frame.width, terminator: " ")
+                label.frame.origin.y = addictionalY
+                label.bounds.size.width += addictionalX
+                print(label.frame.width, terminator: " ")
+                label.frame.size.height += addictionalY
+                label.backgroundColor = .red
+                print(label.frame.width)
                 lastMaxX = label.frame.maxX
-                label.frame.origin.y = frameYFactory(index)
                 return label
             }
         let canvas = UIView()
-        canvas.frame = frame
+        canvas.frame.size.height = labels.map(\.frame.maxY).max()!
+        canvas.frame.size.width = lastMaxX + offset
+        canvas.backgroundColor = backgroundColor
         labels.forEach(canvas.addSubview(_:))
         return canvas.snapshot(for: .init(style: .dark))
     }
 
-    func rotateEffect(_ index: Int) -> CGAffineTransform {
-        CGAffineTransform(rotationAngle: rotateAngleFactory(index))
+    func rotateEffect(_ index: Int, midX _: CGFloat, midY _: CGFloat) -> CATransform3D {
+        let angle = rotateAngleFactory(index)
+        return CATransform3DMakeRotation(angle, 0, 0, 1)
     }
 }
 
@@ -61,7 +74,7 @@ import UIKit
 final class CAPCHAImageTests: XCTestCase {
     func test10DigitCAPCHAWithNoRandom() throws {
         let sut = makeSUT(text: (1 ... 9).map(\.description).joined())
-        let image = try sut.getUIImage(frame: CGRect(x: 0, y: 0, width: 100, height: 20))
+        let image = try sut.getUIImage()
         XCTAssert(snapshot: image, named: "10Degits")
     }
 

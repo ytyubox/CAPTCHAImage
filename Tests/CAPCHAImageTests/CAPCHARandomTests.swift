@@ -11,27 +11,23 @@ import TestUtils
 import UIKit
 import XCTest
 class CAPCHARandomTests: XCTestCase {
-    func testImage() {
-        let labels = "123456789".map(\.description)
-            .map { string -> UILabel in
-                let label = UILabel()
-                label.attributedText = NSAttributedString(
-                    string: string,
-                    attributes: [.font: UIFont.random(in: 15 ... 15)]
-                )
-                label.textColor = .black
-                let rotateEffect = CGAffineTransform(
-                    rotationAngle: CGFloat.random(in: -.pi(0.2) ... .pi(0.2)))
-                label.transform = rotateEffect
-                label.sizeToFit()
-                label.frame.origin.x = CGFloat.random(in: -5 ... 5)
-                label.frame.origin.y = CGFloat.random(in: -20 ... 5)
-                return label
-            }
-        let sut = UIStackView(arrangedSubviews: labels)
-        sut.distribution = .equalSpacing
-        sut.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
-        XCTRecord(snapshot: sut.snapshot(for: .init(style: .dark)), named: "skip-LABEL", remindAssert: false)
+    func testImage() throws {
+        let text = "1" // "123456759"
+        let capcha = CAPCHA(
+            rotateAngleFactory: { _ in
+                .pi(1 / 16)
+//                .random(in:
+//                          -(.pi(0.01)) ... .pi(0.02)
+//                )
+            },
+            frameXFactory: { _ in .random(in: -1 ... 1) },
+            frameYFactory: { _ in .random(in: -1 ... 1) },
+            fontFactory: { _ in .random(in: 15 ... 15) },
+            colorFactory: { _ in .black },
+            targetString: text
+        )
+        let sut = try capcha.getUIImage(backgroundColor: .white)
+        XCTRecord(snapshot: sut, named: "skip-LABEL", remindAssert: false)
     }
 }
 
