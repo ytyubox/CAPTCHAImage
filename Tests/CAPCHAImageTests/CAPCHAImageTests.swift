@@ -48,7 +48,6 @@ struct CAPCHA {
             }
         let canvas = UIView()
         canvas.frame = frame
-        canvas.backgroundColor = .white
         labels.forEach(canvas.addSubview(_:))
         return canvas.snapshot(for: .init(style: .dark))
     }

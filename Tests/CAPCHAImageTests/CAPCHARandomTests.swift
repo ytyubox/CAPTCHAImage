@@ -31,7 +31,7 @@ class CAPCHARandomTests: XCTestCase {
         let sut = UIStackView(arrangedSubviews: labels)
         sut.distribution = .equalSpacing
         sut.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
-        XCTRecord(snapshot: sut.snapshot(for: .init(style: .dark)), named: "LABEL", remindAssert: false)
+        XCTRecord(snapshot: sut.snapshot(for: .init(style: .dark)), named: "skip-LABEL", remindAssert: false)
     }
 }
 
