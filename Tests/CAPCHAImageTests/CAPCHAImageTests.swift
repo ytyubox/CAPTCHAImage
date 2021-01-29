@@ -70,15 +70,33 @@ struct CAPCHA {
 import UIKit
 final class CAPCHAImageTests: XCTestCase {
     func test10DigitCAPCHAWithNoRotatation() throws {
-        let sut = makeSUT(text: (1 ... 9).map(\.description).joined())
+        let sut = makeSUT()
         let image = try sut.getUIImage()
         XCTAssert(snapshot: image, named: "10DigitsNoRotation")
+    }
+
+    func test10DigitCAPCHAWithRotatationby45Degree() throws {
+        let sut = makeSUT(rotateAngleFactory: {
+            _ in
+            .degree(45)
+        })
+        let image = try sut.getUIImage()
+        XCTAssert(snapshot: image, named: "10DigitsWithAllRotation45Degree")
+    }
+
+    func test10DigitCAPCHAWithRotatationby90Degree() throws {
+        let sut = makeSUT(rotateAngleFactory: {
+            _ in
+            .degree(90)
+        })
+        let image = try sut.getUIImage()
+        XCTAssert(snapshot: image, named: "10DigitsWithAllRotation90Degree")
     }
 
     // MARK: - Helpers
 
     private func makeSUT(
-        text: String,
+        text: String = "123456789",
         rotateAngleFactory: @escaping Factory<CAPCHA.F> = { _ in 0 },
         frameXFactory: @escaping Factory<CAPCHA.F> = { _ in 0 },
         frameYFactory: @escaping Factory<CAPCHA.F> = { _ in 0 },
@@ -93,5 +111,11 @@ final class CAPCHAImageTests: XCTestCase {
             colorFactory: colorFactory,
             targetString: text
         )
+    }
+}
+
+extension CGFloat {
+    static func degree(_ amount: CGFloat) -> CGFloat {
+        .pi * amount / 180
     }
 }
