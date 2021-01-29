@@ -28,7 +28,7 @@
                 targetString: text
             )
             let sut = try captcha.getUIImage(backgroundColor: .white)
-            XCTRecord(snapshot: sut, named: "skip-LABEL", remindAssert: false)
+            XCTDemoSkip(snapshot: sut, named: "LABEL")
         }
     }
 

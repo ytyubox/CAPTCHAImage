@@ -13,8 +13,9 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        .package(url: "~/Desktop/TestUtils",
-                 .branch("main")),
+        .package(url: "https://github.com/ytyubox/TestUtils.git",
+                 from: "1.0.0"
+                 ),
     ],
     targets: [
         .target(

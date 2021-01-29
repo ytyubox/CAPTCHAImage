@@ -3,11 +3,11 @@
     "pins": [
       {
         "package": "TestUtils",
-        "repositoryURL": "/Users/ios.yu/Desktop/TestUtils",
+        "repositoryURL": "https://github.com/ytyubox/TestUtils.git",
         "state": {
-          "branch": "main",
-          "revision": "9ed7fda82b4b0522d965947d52c1959bba520359",
-          "version": null
+          "branch": null,
+          "revision": "dee5c5d1c9673123cef4ad6e7a2dd0cc090efc59",
+          "version": "1.0.3"
         }
       }
     ]
