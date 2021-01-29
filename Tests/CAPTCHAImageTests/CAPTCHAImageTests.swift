@@ -2,8 +2,8 @@ import TestUtils
 import XCTest
 
 typealias Factory<T> = (Int) -> T
-struct CAPCHA {
-    internal init(rotateAngleFactory: @escaping Factory<CAPCHA.F>, frameXFactory: @escaping Factory<CAPCHA.F>, frameYFactory: @escaping Factory<CAPCHA.F>, fontFactory: Factory<UIFont>?, colorFactory: Factory<UIColor>?, targetString: String) {
+struct CAPTCHA {
+    internal init(rotateAngleFactory: @escaping Factory<CAPTCHA.F>, frameXFactory: @escaping Factory<CAPTCHA.F>, frameYFactory: @escaping Factory<CAPTCHA.F>, fontFactory: Factory<UIFont>?, colorFactory: Factory<UIColor>?, targetString: String) {
         self.rotateAngleFactory = rotateAngleFactory
         self.frameXFactory = frameXFactory
         self.frameYFactory = frameYFactory
@@ -68,14 +68,14 @@ struct CAPCHA {
 }
 
 import UIKit
-final class CAPCHAImageTests: XCTestCase {
-    func test10DigitCAPCHAWithNoRotatation() throws {
+final class CAPTCHAImageTests: XCTestCase {
+    func test10DigitCAPTCHAWithNoRotatation() throws {
         let sut = makeSUT()
         let image = try sut.getUIImage()
         XCTAssert(snapshot: image, named: "10DigitsNoRotation")
     }
 
-    func test10DigitCAPCHAWithRotatationby45Degree() throws {
+    func test10DigitCAPTCHAWithRotatationby45Degree() throws {
         let sut = makeSUT(rotateAngleFactory: {
             _ in
             .degree(45)
@@ -84,7 +84,7 @@ final class CAPCHAImageTests: XCTestCase {
         XCTAssert(snapshot: image, named: "10DigitsWithAllRotation45Degree")
     }
 
-    func test10DigitCAPCHAWithRotatationby90Degree() throws {
+    func test10DigitCAPTCHAWithRotatationby90Degree() throws {
         let sut = makeSUT(rotateAngleFactory: {
             _ in
             .degree(90)
@@ -97,13 +97,13 @@ final class CAPCHAImageTests: XCTestCase {
 
     private func makeSUT(
         text: String = "123456789",
-        rotateAngleFactory: @escaping Factory<CAPCHA.F> = { _ in 0 },
-        frameXFactory: @escaping Factory<CAPCHA.F> = { _ in 0 },
-        frameYFactory: @escaping Factory<CAPCHA.F> = { _ in 0 },
+        rotateAngleFactory: @escaping Factory<CAPTCHA.F> = { _ in 0 },
+        frameXFactory: @escaping Factory<CAPTCHA.F> = { _ in 0 },
+        frameYFactory: @escaping Factory<CAPTCHA.F> = { _ in 0 },
         fontFactory: @escaping Factory<UIFont> = { _ in .systemFont(ofSize: 15) },
         colorFactory: @escaping Factory<UIColor> = { [UIColor.blue, UIColor.orange][$0 % 2] }
-    ) -> CAPCHA {
-        CAPCHA(
+    ) -> CAPTCHA {
+        CAPTCHA(
             rotateAngleFactory: rotateAngleFactory,
             frameXFactory: frameXFactory,
             frameYFactory: frameYFactory,

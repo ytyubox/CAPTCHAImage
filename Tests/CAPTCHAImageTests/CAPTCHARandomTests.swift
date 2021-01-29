@@ -10,10 +10,10 @@
 import TestUtils
 import UIKit
 import XCTest
-class CAPCHARandomTests: XCTestCase {
+class CAPTCHARandomTests: XCTestCase {
     func testImage() throws {
         let text = "123456789"
-        let capcha = CAPCHA(
+        let captcha = CAPTCHA(
             rotateAngleFactory: { _ in
                 .random(in:
                     -.pi(0.2) ... .pi(0.2)
@@ -25,7 +25,7 @@ class CAPCHARandomTests: XCTestCase {
             colorFactory: { _ in .black },
             targetString: text
         )
-        let sut = try capcha.getUIImage(backgroundColor: .white)
+        let sut = try captcha.getUIImage(backgroundColor: .white)
         XCTRecord(snapshot: sut, named: "skip-LABEL", remindAssert: false)
     }
 }
