@@ -1,3 +1,3 @@
 # CAPCHAImage
 
-A description of this package.
+![](Documents/Resources/DEMO-10Digit.png)

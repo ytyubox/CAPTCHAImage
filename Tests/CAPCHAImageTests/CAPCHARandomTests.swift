@@ -12,17 +12,16 @@ import UIKit
 import XCTest
 class CAPCHARandomTests: XCTestCase {
     func testImage() throws {
-        let text = "1" // "123456759"
+        let text = "123456789"
         let capcha = CAPCHA(
             rotateAngleFactory: { _ in
-                .pi(1 / 16)
-//                .random(in:
-//                          -(.pi(0.01)) ... .pi(0.02)
-//                )
+                .random(in:
+                    -.pi(0.2) ... .pi(0.2)
+                )
             },
             frameXFactory: { _ in .random(in: -1 ... 1) },
-            frameYFactory: { _ in .random(in: -1 ... 1) },
-            fontFactory: { _ in .random(in: 15 ... 15) },
+            frameYFactory: { _ in .random(in: 0 ... 10) },
+            fontFactory: { _ in .random(in: 10 ... 15) },
             colorFactory: { _ in .black },
             targetString: text
         )

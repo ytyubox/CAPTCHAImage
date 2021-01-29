@@ -31,6 +31,7 @@ struct CAPCHA {
             .enumerated()
             .map { (index, string) -> UILabel in
                 let label = UILabel()
+                label.textAlignment = .center
                 var attributed = self.attributed
                 if let font = fontFactory?(index), attributed[.font] == nil {
                     attributed[.font] = font
@@ -40,25 +41,21 @@ struct CAPCHA {
                 }
                 label.attributedText = NSAttributedString(string: string, attributes: attributed)
                 label.sizeToFit()
-                print(label.frame.width, terminator: " ")
-                label.layer.transform = rotateEffect(index, midX: label.frame.midX, midY: label.frame.midY)
                 let addictionalX = frameXFactory(index) // + offset
                 let addictionalY = frameYFactory(index)
-//                print(addictionalX)
                 label.frame.origin.x = addictionalX + lastMaxX
-                print(label.frame.width, terminator: " ")
                 label.frame.origin.y = addictionalY
                 label.bounds.size.width += addictionalX
-                print(label.frame.width, terminator: " ")
                 label.frame.size.height += addictionalY
-                label.backgroundColor = .red
-                print(label.frame.width)
                 lastMaxX = label.frame.maxX
                 return label
             }
+        for (index, label) in labels.enumerated() {
+            label.layer.transform = rotateEffect(index, midX: label.frame.midX, midY: label.frame.midY)
+        }
         let canvas = UIView()
         canvas.frame.size.height = labels.map(\.frame.maxY).max()!
-        canvas.frame.size.width = lastMaxX + offset
+        canvas.frame.size.width = lastMaxX
         canvas.backgroundColor = backgroundColor
         labels.forEach(canvas.addSubview(_:))
         return canvas.snapshot(for: .init(style: .dark))
@@ -72,21 +69,28 @@ struct CAPCHA {
 
 import UIKit
 final class CAPCHAImageTests: XCTestCase {
-    func test10DigitCAPCHAWithNoRandom() throws {
+    func test10DigitCAPCHAWithNoRotatation() throws {
         let sut = makeSUT(text: (1 ... 9).map(\.description).joined())
         let image = try sut.getUIImage()
-        XCTAssert(snapshot: image, named: "10Degits")
+        XCTAssert(snapshot: image, named: "10DigitsNoRotation")
     }
 
     // MARK: - Helpers
 
-    private func makeSUT(text: String) -> CAPCHA {
+    private func makeSUT(
+        text: String,
+        rotateAngleFactory: @escaping Factory<CAPCHA.F> = { _ in 0 },
+        frameXFactory: @escaping Factory<CAPCHA.F> = { _ in 0 },
+        frameYFactory: @escaping Factory<CAPCHA.F> = { _ in 0 },
+        fontFactory: @escaping Factory<UIFont> = { _ in .systemFont(ofSize: 15) },
+        colorFactory: @escaping Factory<UIColor> = { [UIColor.blue, UIColor.orange][$0 % 2] }
+    ) -> CAPCHA {
         CAPCHA(
-            rotateAngleFactory: { _ in 0 },
-            frameXFactory: { _ in 0 },
-            frameYFactory: { _ in 0 },
-            fontFactory: { _ in .systemFont(ofSize: 15) },
-            colorFactory: { [UIColor.blue, UIColor.orange][$0 % 2] },
+            rotateAngleFactory: rotateAngleFactory,
+            frameXFactory: frameXFactory,
+            frameYFactory: frameYFactory,
+            fontFactory: fontFactory,
+            colorFactory: colorFactory,
             targetString: text
         )
     }
